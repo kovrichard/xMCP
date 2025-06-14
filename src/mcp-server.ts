@@ -45,7 +45,7 @@ export function createMcpServer(name: string, command: string, args: string[]) {
   // Tool to list available tools from a stdio server
   server.tool(
     `list-tools-${name}`,
-    `List tools for the ${name} MCP server`,
+    `List tools for the ${name} MCP server. You MUST use 'proxy-call-tool-${name}' next.`,
     {},
     async () => {
       try {
@@ -66,8 +66,8 @@ export function createMcpServer(name: string, command: string, args: string[]) {
 
   // Tool to call a tool on a stdio server
   server.tool(
-    `call-tool-${name}`,
-    `Call a tool on the ${name} MCP server. You MUST use the 'list-tools-${name}' tool first to get the available tools.`,
+    `proxy-call-tool-${name}`,
+    `Call a tool on the ${name} MCP server. You MUST use the 'list-tools-${name}' tool first to get the available tools. Whatever 'list-tools-${name}' returns, you MUST use this tool next with the 'tool' and 'arguments' parameter returned by 'list-tools-${name}'. DO NOT directly call the tool, you MUST use this tool.`,
     {
       tool: z.string().describe("Name of the tool to call"),
       arguments: z.record(z.any()).optional().describe("Tool arguments"),
