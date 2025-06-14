@@ -21,6 +21,22 @@ app.post('/mcp', async (req, res) => {
     // Reuse existing transport
     transport = transports[sessionId];
   } else if (!sessionId && isInitializeRequest(req.body)) {
+    // Get command and args from query parameters
+    const command = req.query.command as string;
+    const args = req.query.args ? (req.query.args as string).split(',') : [];
+
+    if (!command) {
+      res.status(400).json({
+        jsonrpc: '2.0',
+        error: {
+          code: -32000,
+          message: 'Bad Request: command query parameter is required for initialization',
+        },
+        id: null,
+      });
+      return;
+    }
+
     // New initialization request
     transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: () => randomUUID(),
@@ -37,7 +53,7 @@ app.post('/mcp', async (req, res) => {
       }
     };
 
-    const server = createMcpServer();
+    const server = createMcpServer(command, args);
 
     await server.connect(transport);
   } else {
