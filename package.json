@@ -4,7 +4,8 @@
     "main": "dist/server.js",
     "scripts": {
         "build": "tsc",
-        "start": "node dist/server.js"
+        "start": "node dist/server.js",
+        "inspect": "bunx @modelcontextprotocol/inspector bun run src/server.ts"
     },
     "dependencies": {
         "@modelcontextprotocol/sdk": "^1.12.3",

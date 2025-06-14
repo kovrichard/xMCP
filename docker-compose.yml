@@ -1,0 +1,12 @@
+services:
+  xmcp-server:
+    build:
+      context: .
+      target: dev
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    working_dir: /app
+    command: bun run src/server.ts
