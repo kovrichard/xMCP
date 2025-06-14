@@ -36,7 +36,7 @@ async function getOrCreateClient(command: string, args: string[]): Promise<Clien
   return client;
 }
 
-export function createMcpServer(command: string, args: string[]) {
+export function createMcpServer(name: string, command: string, args: string[]) {
   const server = new McpServer({
     name: "xmcp-server",
     version: "1.0.0"
@@ -44,16 +44,18 @@ export function createMcpServer(command: string, args: string[]) {
 
   // Tool to list available tools from a stdio server
   server.tool(
-    "list-tools",
+    `list-tools-${name}`,
+    `List tools for the ${name} MCP server`,
     {},
     async () => {
       try {
         const client = await getOrCreateClient(command, args);
         const tools = await client.listTools();
+
         return {
           content: [{
             type: "text",
-            text: JSON.stringify(tools, null, 2)
+            text: JSON.stringify(tools.tools, null, 2)
           }]
         };
       } catch (error: any) {
@@ -64,7 +66,8 @@ export function createMcpServer(command: string, args: string[]) {
 
   // Tool to call a tool on a stdio server
   server.tool(
-    "call-tool",
+    `call-tool-${name}`,
+    `Call a tool on the ${name} MCP server. You MUST use the 'list-tools-${name}' tool first to get the available tools.`,
     {
       tool: z.string().describe("Name of the tool to call"),
       arguments: z.record(z.any()).optional().describe("Tool arguments"),

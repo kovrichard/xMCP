@@ -22,6 +22,7 @@ app.post('/mcp', async (req, res) => {
     transport = transports[sessionId];
   } else if (!sessionId && isInitializeRequest(req.body)) {
     // Get command and args from query parameters
+    const name = req.query.name as string;
     const command = req.query.command as string;
     const args = req.query.args ? (req.query.args as string).split(',') : [];
 
@@ -53,7 +54,7 @@ app.post('/mcp', async (req, res) => {
       }
     };
 
-    const server = createMcpServer(command, args);
+    const server = createMcpServer(name, command, args);
 
     await server.connect(transport);
   } else {
