@@ -4,6 +4,7 @@ import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 import express from "express";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
+import { createMcpServer } from "./mcp-server";
 
 const app = express();
 app.use(express.json());
@@ -36,28 +37,7 @@ app.post('/mcp', async (req, res) => {
       }
     };
 
-    const server = new McpServer({
-      name: "xmcp-server",
-      version: "1.0.0"
-    });
-
-    server.tool(
-      "proxy-http-to-stdio",
-      {
-        command: z.string(),
-        args: z.array(z.string()),
-      },
-      async ({ command, args }) => {
-        console.log(command, args);
-
-        return {
-          content: [{
-            type: "text",
-            text: `Got it: ${command} ${args.join(" ")}. Thanks!`
-          }]
-        }
-      }
-    );
+    const server = createMcpServer();
 
     await server.connect(transport);
   } else {
