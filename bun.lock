@@ -4,13 +4,13 @@
     "": {
       "name": "xmcp-server",
       "dependencies": {
-        "@modelcontextprotocol/sdk": "^1.12.3",
-        "express": "^5.1.0",
-        "zod": "^3.25.64",
+        "@modelcontextprotocol/sdk": "1.12.3",
+        "express": "5.1.0",
+        "zod": "3.25.64",
       },
       "devDependencies": {
-        "@types/express": "^5.0.3",
-        "typescript": "^5.4.0",
+        "@types/express": "5.0.3",
+        "typescript": "5.8.3",
       },
     },
   },
