@@ -1,4 +1,4 @@
-.PHONY: build start stop restart sh logs
+.PHONY: build start stop restart sh ish logs
 
 build:
 	docker compose build
@@ -13,6 +13,9 @@ restart: stop start
 
 sh:
 	docker compose exec xmcp-server /bin/bash
+
+ish:
+	docker compose exec mcp-inspector /bin/bash
 
 logs:
 	docker compose logs -f
