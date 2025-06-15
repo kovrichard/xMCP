@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { z } from "zod";
+import { JsonSchema } from "./types/schema";
 
 // Store active clients using command+args as key
 const activeClients: { [key: string]: { client: Client, transport: StdioClientTransport } } = {};
@@ -36,17 +37,7 @@ async function getOrCreateClient(command: string, args: string[]): Promise<Clien
   return client;
 }
 
-interface JsonSchemaProperty {
-  type: 'string' | 'number' | 'boolean' | 'array' | 'object';
-  description?: string;
-  properties?: Record<string, JsonSchemaProperty>;
-}
 
-interface JsonSchema {
-  type: 'object';
-  properties?: Record<string, JsonSchemaProperty>;
-  required?: string[];
-}
 
 // Convert input schema to ZodRawShape
 function convertToZodShape(schema: JsonSchema): z.ZodRawShape {
