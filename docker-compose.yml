@@ -14,6 +14,11 @@ services:
     command: bun run src/server.ts
     networks:
       - xmcp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT:-3001}/health"]
+      interval: 3s
+      timeout: 5s
+      retries: 3
 
   mcp-inspector:
     build:
@@ -30,6 +35,14 @@ services:
     command: bun run inspect
     networks:
       - xmcp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6277/health"]
+      interval: 3s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      xmcp-server:
+        condition: service_healthy
 
 networks:
   xmcp:

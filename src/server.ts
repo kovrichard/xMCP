@@ -94,6 +94,10 @@ app.get('/mcp', handleSessionRequest);
 // Handle DELETE requests for session termination
 app.delete('/mcp', handleSessionRequest);
 
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 app.listen(PORT, (error) => {
   if (error) {
     console.error('Error starting server:', error);
