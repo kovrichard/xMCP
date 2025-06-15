@@ -1,4 +1,4 @@
-import { JsonSchema } from "../types/schema";
+import type { JsonSchema } from "@/types/schema";
 import { z } from "zod";
 
 export function convertToZodShape(schema: JsonSchema): z.ZodRawShape {
@@ -11,21 +11,21 @@ export function convertToZodShape(schema: JsonSchema): z.ZodRawShape {
     let zodType: z.ZodTypeAny;
 
     switch (value.type) {
-      case 'string':
+      case "string":
         zodType = z.string();
         break;
-      case 'number':
+      case "number":
         zodType = z.number();
         break;
-      case 'boolean':
+      case "boolean":
         zodType = z.boolean();
         break;
-      case 'array':
+      case "array":
         zodType = z.array(z.any());
         break;
-      case 'object':
+      case "object":
         zodType = value.properties
-          ? z.object(convertToZodShape({ type: 'object', properties: value.properties }))
+          ? z.object(convertToZodShape({ type: "object", properties: value.properties }))
           : z.record(z.any());
         break;
       default:

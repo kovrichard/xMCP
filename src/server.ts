@@ -1,8 +1,8 @@
+import { randomUUID } from "node:crypto";
+import { createMcpServer } from "@/mcp-server";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 import express from "express";
-import { randomUUID } from "node:crypto";
-import { createMcpServer } from "@/mcp-server";
 
 const PORT = process.env.PORT || 3001;
 
@@ -12,9 +12,9 @@ app.use(express.json());
 const transports: { [sessionId: string]: StreamableHTTPServerTransport } = {};
 
 // Handle POST requests for client-to-server communication
-app.post('/mcp', async (req, res) => {
+app.post("/mcp", async (req, res) => {
   // Check for existing session ID
-  const sessionId = req.headers['mcp-session-id'] as string | undefined;
+  const sessionId = req.headers["mcp-session-id"] as string | undefined;
   let transport: StreamableHTTPServerTransport;
 
   if (sessionId && transports[sessionId]) {
@@ -24,14 +24,14 @@ app.post('/mcp', async (req, res) => {
     // Get command and args from query parameters
     const name = req.query.name as string;
     const command = req.query.command as string;
-    const args = req.query.args ? (req.query.args as string).split(',') : [];
+    const args = req.query.args ? (req.query.args as string).split(",") : [];
 
     if (!command) {
       res.status(400).json({
-        jsonrpc: '2.0',
+        jsonrpc: "2.0",
         error: {
           code: -32000,
-          message: 'Bad Request: command query parameter is required for initialization',
+          message: "Bad Request: command query parameter is required for initialization",
         },
         id: null,
       });
@@ -44,7 +44,7 @@ app.post('/mcp', async (req, res) => {
       onsessioninitialized: (sessionId) => {
         // Store the transport by session ID
         transports[sessionId] = transport;
-      }
+      },
     });
 
     // Clean up transport when closed
@@ -60,10 +60,10 @@ app.post('/mcp', async (req, res) => {
   } else {
     // Invalid request
     res.status(400).json({
-      jsonrpc: '2.0',
+      jsonrpc: "2.0",
       error: {
         code: -32000,
-        message: 'Bad Request: No valid session ID provided',
+        message: "Bad Request: No valid session ID provided",
       },
       id: null,
     });
@@ -76,9 +76,9 @@ app.post('/mcp', async (req, res) => {
 
 // Reusable handler for GET and DELETE requests
 const handleSessionRequest = async (req: express.Request, res: express.Response) => {
-  const sessionId = req.headers['mcp-session-id'] as string | undefined;
+  const sessionId = req.headers["mcp-session-id"] as string | undefined;
   if (!sessionId || !transports[sessionId]) {
-    res.status(400).send('Invalid or missing session ID');
+    res.status(400).send("Invalid or missing session ID");
     return;
   }
 
@@ -87,18 +87,18 @@ const handleSessionRequest = async (req: express.Request, res: express.Response)
 };
 
 // Handle GET requests for server-to-client notifications via SSE
-app.get('/mcp', handleSessionRequest);
+app.get("/mcp", handleSessionRequest);
 
 // Handle DELETE requests for session termination
-app.delete('/mcp', handleSessionRequest);
+app.delete("/mcp", handleSessionRequest);
 
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
+app.get("/health", (_req, res) => {
+  res.status(200).send("OK");
 });
 
 app.listen(PORT, (error) => {
   if (error) {
-    console.error('Error starting server:', error);
+    console.error("Error starting server:", error);
   } else {
     console.log(`xMCP server is running on port ${PORT}`);
   }

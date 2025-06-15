@@ -1,15 +1,17 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { convertToZodShape } from "@/lib/schema-converter";
+import type { JsonSchema } from "@/types/schema";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { JsonSchema } from "@/types/schema";
-import { convertToZodShape } from "@/lib/schema-converter";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 // Store active clients using command+args as key
-const activeClients: { [key: string]: { client: Client, transport: StdioClientTransport } } = {};
+const activeClients: {
+  [key: string]: { client: Client; transport: StdioClientTransport };
+} = {};
 
 // Create a unique key for a server based on its command and args
 function getServerKey(command: string, args: string[]): string {
-  return `${command}:${args.join(':')}`;
+  return `${command}:${args.join(":")}`;
 }
 
 // Get or create a client for a server
@@ -24,12 +26,12 @@ async function getOrCreateClient(command: string, args: string[]): Promise<Clien
 
   const transport = new StdioClientTransport({
     command,
-    args
+    args,
   });
 
   const client = new Client({
     name: "xmcp-proxy",
-    version: "1.0.0"
+    version: "1.0.0",
   });
 
   await client.connect(transport);
@@ -40,23 +42,23 @@ async function getOrCreateClient(command: string, args: string[]): Promise<Clien
 export async function createMcpServer(name: string, command: string, args: string[]) {
   const server = new McpServer({
     name: name,
-    version: "1.0.0"
+    version: "1.0.0",
   });
 
   const client = await getOrCreateClient(command, args);
   const tools = await client.listTools();
 
-  tools.tools.forEach(tool => {
+  tools.tools.forEach((tool) => {
     const zodShape = convertToZodShape(tool.inputSchema as JsonSchema);
     server.tool(tool.name, tool.description || "", zodShape, async (args) => {
       const result = await client.callTool({
         name: tool.name,
-        arguments: args
+        arguments: args,
       });
 
       return {
-        content: result.content as any
-      }
+        content: result.content as any,
+      };
     });
   });
 
