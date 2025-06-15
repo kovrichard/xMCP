@@ -16,17 +16,18 @@ services:
       - xmcp
 
   mcp-inspector:
-    image: node:24-alpine3.21
+    build:
+      context: inspector
     environment:
       HOST: 0.0.0.0
     ports:
       - 6274:6274
       - 6277:6277
     volumes:
-      - .:/app
+      - ./inspector:/app
       - /app/node_modules
     working_dir: /app
-    command: npx @modelcontextprotocol/inspector node src/server.ts
+    command: bun run inspect
     networks:
       - xmcp
 
