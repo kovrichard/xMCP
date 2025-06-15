@@ -51,6 +51,8 @@ export async function createMcpServer(name: string, command: string, args: strin
   tools.tools.forEach((tool) => {
     const zodShape = convertToZodShape(tool.inputSchema as JsonSchema);
     server.tool(tool.name, tool.description || "", zodShape, async (args) => {
+      console.log("Calling tool", tool.name, args);
+
       const result = await client.callTool({
         name: tool.name,
         arguments: args,
