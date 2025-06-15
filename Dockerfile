@@ -14,8 +14,8 @@ ENV PATH="/root/.bun/bin:${PATH}"
 RUN pip3 install --break-system-packages uvicorn
 
 # Setup aliases
-RUN echo "alias uv='uvicorn'" >> ~/.bashrc
-RUN echo "alias bunx='bun x'" >> ~/.bashrc
+RUN echo -e '#!/bin/sh\n/root/.bun/bin/bun x "$@"' > /usr/local/bin/bunx && chmod +x /usr/local/bin/bunx
+RUN echo -e '#!/bin/sh\nexec /usr/bin/uvicorn "$@"' > /usr/local/bin/uv && chmod +x /usr/local/bin/uv
 
 WORKDIR /app
 
