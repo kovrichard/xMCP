@@ -1,6 +1,11 @@
 {
   "mcpServers": {
-    "default-server": {
+    "everything": {
+      "type": "streamable-http",
+      "url": "http://xmcp-server:3001/mcp?name=everything&command=npx&args=-y,@modelcontextprotocol/server-everything",
+      "note": "For Streamable HTTP connections, add this URL directly in your MCP Client"
+    },
+    "context7": {
       "type": "streamable-http",
       "url": "http://xmcp-server:3001/mcp?name=context7&command=npx&args=-y,@upstash/context7-mcp",
       "note": "For Streamable HTTP connections, add this URL directly in your MCP Client"

@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "inspect": "bun run node_modules/@modelcontextprotocol/inspector/cli/build/cli.js --config config.json --server default-server"
+    "inspect": "bun run node_modules/@modelcontextprotocol/inspector/cli/build/cli.js --config config.json --server everything"
   },
   "dependencies": {
     "@modelcontextprotocol/inspector": "0.14.2"
