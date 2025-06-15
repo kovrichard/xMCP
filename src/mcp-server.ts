@@ -3,6 +3,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { z } from "zod";
 import { JsonSchema } from "./types/schema";
+import { convertToZodShape } from "./lib/schema-converter";
 
 // Store active clients using command+args as key
 const activeClients: { [key: string]: { client: Client, transport: StdioClientTransport } } = {};
@@ -37,58 +38,9 @@ async function getOrCreateClient(command: string, args: string[]): Promise<Clien
   return client;
 }
 
-
-
-// Convert input schema to ZodRawShape
-function convertToZodShape(schema: JsonSchema): z.ZodRawShape {
-  if (!schema.properties) {
-    return {};
-  }
-
-  const shape: z.ZodRawShape = {};
-  for (const [key, value] of Object.entries(schema.properties)) {
-    let zodType: z.ZodTypeAny;
-
-    switch (value.type) {
-      case 'string':
-        zodType = z.string();
-        break;
-      case 'number':
-        zodType = z.number();
-        break;
-      case 'boolean':
-        zodType = z.boolean();
-        break;
-      case 'array':
-        zodType = z.array(z.any());
-        break;
-      case 'object':
-        zodType = value.properties
-          ? z.object(convertToZodShape({ type: 'object', properties: value.properties }))
-          : z.record(z.any());
-        break;
-      default:
-        zodType = z.any();
-    }
-
-    // Add description if available
-    if (value.description) {
-      zodType = zodType.describe(value.description);
-    }
-
-    // Make optional if not in required array
-    if (!schema.required?.includes(key)) {
-      zodType = zodType.optional();
-    }
-
-    shape[key] = zodType;
-  }
-  return shape;
-}
-
-export async function createMcpServer(command: string, args: string[]) {
+export async function createMcpServer(name: string, command: string, args: string[]) {
   const server = new McpServer({
-    name: "xmcp-server",
+    name: name,
     version: "1.0.0"
   });
 
