@@ -6,9 +6,12 @@
         "rootDir": "src",
         "strict": true,
         "esModuleInterop": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "paths": {
+            "@/*": ["./src/*"]
+        },
     },
     "include": [
         "src/**/*"
-    ]
+    ],
 }

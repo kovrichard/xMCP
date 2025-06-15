@@ -1,9 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { z } from "zod";
-import { JsonSchema } from "./types/schema";
-import { convertToZodShape } from "./lib/schema-converter";
+import { JsonSchema } from "@/types/schema";
+import { convertToZodShape } from "@/lib/schema-converter";
 
 // Store active clients using command+args as key
 const activeClients: { [key: string]: { client: Client, transport: StdioClientTransport } } = {};

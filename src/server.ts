@@ -1,10 +1,8 @@
-import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 import express from "express";
 import { randomUUID } from "node:crypto";
-import { z } from "zod";
-import { createMcpServer } from "./mcp-server";
+import { createMcpServer } from "@/mcp-server";
 
 const PORT = process.env.PORT || 3001;
 
