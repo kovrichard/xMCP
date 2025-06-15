@@ -10,13 +10,21 @@ const activeClients: {
 } = {};
 
 // Create a unique key for a server based on its command and args
-function getServerKey(command: string, args: string[]): string {
-  return `${command}:${args.join(":")}`;
+function getServerKey(
+  command: string,
+  args: string[],
+  env: Record<string, string>
+): string {
+  return `${command}:${args.join(":")}:${JSON.stringify(env)}`;
 }
 
 // Get or create a client for a server
-async function getOrCreateClient(command: string, args: string[]): Promise<Client> {
-  const key = getServerKey(command, args);
+async function getOrCreateClient(
+  command: string,
+  args: string[],
+  env: Record<string, string>
+): Promise<Client> {
+  const key = getServerKey(command, args, env);
 
   if (activeClients[key]) {
     const { transport } = activeClients[key];
@@ -24,10 +32,13 @@ async function getOrCreateClient(command: string, args: string[]): Promise<Clien
     delete activeClients[key];
   }
 
-  const transport = new StdioClientTransport({
+  const payload = {
     command,
     args,
-  });
+    env,
+  };
+
+  const transport = new StdioClientTransport(payload);
 
   const client = new Client({
     name: "xmcp-proxy",
@@ -39,13 +50,18 @@ async function getOrCreateClient(command: string, args: string[]): Promise<Clien
   return client;
 }
 
-export async function createMcpServer(name: string, command: string, args: string[]) {
+export async function createMcpServer(
+  name: string,
+  command: string,
+  args: string[],
+  env: Record<string, string>
+) {
   const server = new McpServer({
     name: name,
     version: "1.0.0",
   });
 
-  const client = await getOrCreateClient(command, args);
+  const client = await getOrCreateClient(command, args, env);
   const tools = await client.listTools();
 
   tools.tools.forEach((tool) => {

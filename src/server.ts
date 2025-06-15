@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { parseEnvsFromQuery } from "@/lib/utils";
 import { createMcpServer } from "@/mcp-server";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
@@ -25,6 +26,7 @@ app.post("/mcp", async (req, res) => {
     const name = req.query.name as string;
     const command = req.query.command as string;
     const args = req.query.args ? (req.query.args as string).split(",") : [];
+    const env = parseEnvsFromQuery(req.query);
 
     if (!command) {
       res.status(400).json({
@@ -54,7 +56,7 @@ app.post("/mcp", async (req, res) => {
       }
     };
 
-    const server = await createMcpServer(name, command, args);
+    const server = await createMcpServer(name, command, args, env);
 
     await server.connect(transport);
   } else {
