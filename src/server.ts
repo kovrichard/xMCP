@@ -6,6 +6,8 @@ import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { createMcpServer } from "./mcp-server";
 
+const PORT = process.env.PORT || 3001;
+
 const app = express();
 app.use(express.json());
 
@@ -92,10 +94,10 @@ app.get('/mcp', handleSessionRequest);
 // Handle DELETE requests for session termination
 app.delete('/mcp', handleSessionRequest);
 
-app.listen(3000, (error) => {
+app.listen(PORT, (error) => {
   if (error) {
     console.error('Error starting server:', error);
   } else {
-    console.log('xMCP server is running on port 3000');
+    console.log(`xMCP server is running on port ${PORT}`);
   }
 });
