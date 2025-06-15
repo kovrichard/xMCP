@@ -16,6 +16,8 @@ RUN pip3 install --break-system-packages uvicorn
 # Setup aliases
 RUN echo -e '#!/bin/sh\n/root/.bun/bin/bun x "$@"' > /usr/local/bin/bunx && chmod +x /usr/local/bin/bunx
 RUN echo -e '#!/bin/sh\nexec /usr/bin/uvicorn "$@"' > /usr/local/bin/uv && chmod +x /usr/local/bin/uv
+# This last one is a bit cursed, but it's the only way to get npx to work in the container
+RUN echo -e '#!/bin/sh\n/root/.bun/bin/bun x "$@"' > /usr/local/bin/npx && chmod +x /usr/local/bin/npx
 
 WORKDIR /app
 
