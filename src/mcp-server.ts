@@ -86,7 +86,7 @@ function convertToZodShape(schema: JsonSchema): z.ZodRawShape {
   return shape;
 }
 
-export async function createMcpServer(name: string, command: string, args: string[]) {
+export async function createMcpServer(command: string, args: string[]) {
   const server = new McpServer({
     name: "xmcp-server",
     version: "1.0.0"
