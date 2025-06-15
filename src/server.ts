@@ -54,7 +54,7 @@ app.post('/mcp', async (req, res) => {
       }
     };
 
-    const server = createMcpServer(name, command, args);
+    const server = await createMcpServer(name, command, args);
 
     await server.connect(transport);
   } else {
