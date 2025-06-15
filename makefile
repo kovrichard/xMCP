@@ -15,4 +15,4 @@ sh:
 	docker compose exec xmcp-server /bin/bash
 
 logs:
-	docker compose logs -f xmcp-server
+	docker compose logs -f
